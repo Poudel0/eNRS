@@ -206,10 +206,25 @@ contract eNRS_Engine is ReentrancyGuard {
 
     function _healthFactor(address user) private view returns (uint256) {
         // To get Collateral Value
+
+        
         (uint256 totaleNRSMinted, uint256 collateralValueInUSD) = _getAccountInfo(user);
+
+        if(totaleNRSMinted ==0){
+            return type(uint256).max;
+        }
         uint256 collateralAdjustedThreshold = (collateralValueInUSD * LIQUIDATION_THRESHOLD)/100;
         return ((collateralAdjustedThreshold * 1e18 )/ totaleNRSMinted);        
     }
+
+    function _calculateHealthFactor(uint256 totalMinted, uint256 collateralInUSD) internal pure returns(uint256){
+        if(totalMinted == 0){
+            return type(uint256).max;
+        }
+        uint256 collateralAdjustedThreshold = (collateralInUSD * LIQUIDATION_THRESHOLD)/100;
+        return ((collateralAdjustedThreshold * 1e18 )/ totalMinted);      
+    }
+    
 
    
 
@@ -252,5 +267,27 @@ contract eNRS_Engine is ReentrancyGuard {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_PriceFeeds[token]);
         (, int256 price,,,) = priceFeed.latestRoundData();
         return ((uint256(price) * 1e10) * amount) / 1e18; // Additional Fee Precision * Precision
+    }
+
+    function gethealthFactor(address user) private view returns (uint256){
+        uint256 healthFactor = _healthFactor(user);
+        return healthFactor;
+    }
+    function calculateHealthFactor(uint256 totalMinted, uint256 collateralInUSD) external pure returns(uint256){
+        return _calculateHealthFactor(totalMinted,collateralInUSD);
+    }
+
+    // function totalSupply() public view returns(uint256){
+    //     return s_eNRSMinted;
+    // }
+    function getCollateralTokens() external view returns(address[] memory){
+        return s_CollateralTokens;
+    }
+
+    function getCollateralBalance(address user, address token) external view returns(uint256){
+        return s_collateralDeposited[user][token];
+    }
+    function getAccountInfo(address user) public view returns(uint256,uint256){
+        return _getAccountInfo(user);
     }
 }

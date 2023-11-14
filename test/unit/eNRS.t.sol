@@ -32,6 +32,19 @@ contract eNRSTest is Test{
 
     }
 
+    // Modifier
+
+    modifier depositedCollateralAndMinted{
+        vm.startPrank(USER);
+        ERC20Mock(weth).approve(address(engine),AMOUNT_COLLATERAL);
+        engine.depositCollateralAndMinteNRS(weth,AMOUNT_COLLATERAL,100);
+
+        vm.stopPrank();
+
+        _;
+    } 
+
+
     // Constructor Test
 
     address[] public tokenAddresses;
@@ -79,6 +92,16 @@ contract eNRSTest is Test{
         engine.depositCollateral(weth, 0);
         vm.stopPrank();
     }
+
+
+    // HealthFactor Test
+
+    // function test_HealthFactor () public depositedCollateralAndMinted{
+    //     // uint256 healthfactor = 
+
+    // }
+
+
 
 
 }
