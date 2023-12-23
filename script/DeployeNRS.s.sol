@@ -2,8 +2,8 @@
 pragma solidity 0.8.20;
 
 import {Script} from "forge-std/Script.sol";
-import {eNRS} from "../src/eNRS.sol";
-import {eNRS_Engine} from "../src/eNRS_Engine.sol";
+import {eNRS} from "../src/eNRS/eNRS.sol";
+import {eNRS_Engine} from "../src/eNRS/eNRS_Engine.sol";
 import { HelperConfig} from "./HelperConfig.s.sol";
 
 contract DeployeNRS is Script{

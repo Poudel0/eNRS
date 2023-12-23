@@ -258,15 +258,15 @@ contract eNRS_Engine is ReentrancyGuard {
         for (uint256 i = 0; i <= s_CollateralTokens.length; i++) {
             address token = s_CollateralTokens[i];
             uint256 amount = s_collateralDeposited[user][token];
-            totalCollateralValueInUSD += getUSDValue(token, amount);
+            totalCollateralValueInUSD += getNRSValue(token, amount);
         }
         return totalCollateralValueInUSD;
     }
 
-    function getUSDValue(address token, uint256 amount) public view returns (uint256) {
+    function getNRSValue(address token, uint256 amount) public view returns (uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_PriceFeeds[token]);
         (, int256 price,,,) = priceFeed.latestRoundData();
-        return ((uint256(price) * 1e10) * amount) / 1e18; // Additional Fee Precision * Precision
+        return ((uint256(price) * 1e10 * 133) * amount) / 1e18; // Additional Fee Precision * Precision
     }
 
     function gethealthFactor(address user) private view returns (uint256){
@@ -287,7 +287,7 @@ contract eNRS_Engine is ReentrancyGuard {
     function getCollateralBalance(address user, address token) external view returns(uint256){
         return s_collateralDeposited[user][token];
     }
-    function getAccountInfo(address user) public view returns(uint256,uint256){
-        return _getAccountInfo(user);
+    function getAccountInfo(address user) public view returns(uint256 totaleNRSMinted, uint256 collateralValueInUSD){
+        ( totaleNRSMinted,  collateralValueInUSD) =_getAccountInfo(user);
     }
 }

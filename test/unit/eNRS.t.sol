@@ -2,8 +2,8 @@
 pragma solidity 0.8.20;
 import {Test} from "forge-std/Test.sol";
 import {DeployeNRS} from "../../script/DeployeNRS.s.sol";
-import {eNRS} from "../../src/eNRS.sol";
-import {eNRS_Engine} from "../../src/eNRS_Engine.sol";
+import {eNRS} from "../../src/eNRS/eNRS.sol";
+import {eNRS_Engine} from "../../src/eNRS/eNRS_Engine.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 
@@ -66,8 +66,8 @@ contract eNRSTest is Test{
 
     function test_getUSDValue( ) public {
     uint256 ethAmount = 15e18;
-    uint256  expectedUSD = 30000e18;
-    uint256 actualUSD = engine.getUSDValue(weth, ethAmount);
+    uint256  expectedUSD = 30000e18 * 133;
+    uint256 actualUSD = engine.getNRSValue(weth, ethAmount);
     assertEq(expectedUSD,actualUSD);
 
 

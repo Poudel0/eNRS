@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity 0.8.20;
 import {Test} from "forge-std/Test.sol";
-import {eNRS} from "../../src/eNRS.sol";
-import {eNRS_Engine} from "../../src/eNRS_Engine.sol";
+import {eNRS} from "../../src/eNRS/eNRS.sol";
+import {eNRS_Engine} from "../../src/eNRS/eNRS_Engine.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 
 contract Handler is Test{
@@ -30,6 +30,8 @@ contract Handler is Test{
     function minteNRS(uint256 amount, uint256 senderSeed)public{
         // amount = bound(amount,1,MAX_DEPOSIT_SIZE);
         // vm.assume(usersWithCollateralDeposited.length!=0);
+                timesMintIsCalled++;
+
         if(usersWithCollateralDeposited.length ==0){
             return;
         }
@@ -40,14 +42,13 @@ contract Handler is Test{
             return;
         }
         amount = bound(amount,0,uint256(maxAmountToMint));
-         if(amount==0){
+        if(amount==0){
             return;
         }
         vm.startPrank(sender);
 
         engine.minteNRS(amount);
         vm.stopPrank();
-        timesMintIsCalled++;
     }
 
 
